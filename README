@@ -1,0 +1,3 @@
+Para rodar:
+mpirun -np [nProcessos] ./multi_partition_mpi [nElements] [-v]
+

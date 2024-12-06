@@ -1,6 +1,0 @@
-
-hello:5300 terminated with signal 11 at PC=5649b931279d SP=7ffcc7c52cf0.  Backtrace:
-./hello(+0x179d)[0x5649b931279d]
-/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f479a086d90]
-/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f479a086e40]
-./hello(+0x1225)[0x5649b9312225]

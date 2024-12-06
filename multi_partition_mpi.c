@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <limits.h>
 
+#include "chrono.c"
+
 
 #define DEBUG 0
 
@@ -43,6 +45,8 @@ void verifica_particoes(int rank, int total_recebido, long long *minha_particao,
         printf("Elementos particionados: %d\n", soma_total);
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
+
     long long lim_inf = rank == 0 ? 0 : P[rank - 1];
     long long lim_sup = P[rank];
 
@@ -56,19 +60,19 @@ void verifica_particoes(int rank, int total_recebido, long long *minha_particao,
 }
 
 void multi_partition_mpi(long long *Input, int n, long long *P, int np, int rank) {
-    long long **particoes = malloc(np * sizeof(long long*));
+    long long **particoes = (long long**) malloc(np * sizeof(long long*));
     for (int i = 0; i < np; ++i) {
-        particoes[i] = malloc(n * sizeof(long long)); // Alocação máxima possível
+        particoes[i] = (long long*) malloc(n * sizeof(long long)); // Alocação máxima possível
     }
-    int *tamanho_particoes = calloc(np, sizeof(int));
+    int *tamanho_particoes = (int*) calloc(np, sizeof(int));
 
     particiona(Input, n, P, np, particoes, tamanho_particoes);
 
     // Preparar dados para MPI_Alltoallv
-    int *sendcounts = malloc(np * sizeof(int));
-    int *sdispls = malloc(np * sizeof(int));
-    int *recvcounts = malloc(np * sizeof(int));
-    int *rdispls = malloc(np * sizeof(int));
+    int *sendcounts = (int*)malloc(np * sizeof(int));
+    int *sdispls = (int*)malloc(np * sizeof(int));
+    int *recvcounts = (int*)malloc(np * sizeof(int));
+    int *rdispls = (int*)malloc(np * sizeof(int));
 
     // Calculando sendcounts e deslocamentos
     int total_envio = 0;
@@ -78,7 +82,7 @@ void multi_partition_mpi(long long *Input, int n, long long *P, int np, int rank
         total_envio += tamanho_particoes[i];
     }
 
-    long long *sendbuf = malloc(total_envio * sizeof(long long));
+    long long *sendbuf = (long long*)malloc(total_envio * sizeof(long long));
     for (int i = 0, idx = 0; i < np; ++i) {
         for (int j = 0; j < tamanho_particoes[i]; ++j) {
             sendbuf[idx++] = particoes[i][j];
@@ -95,7 +99,7 @@ void multi_partition_mpi(long long *Input, int n, long long *P, int np, int rank
         total_recebido += recvcounts[i];
     }
 
-    long long *minha_particao = malloc(total_recebido * sizeof(long long));
+    long long *minha_particao = (long long*)malloc(total_recebido * sizeof(long long));
 
     // Realizar comunicação com MPI_Alltoallv
     MPI_Alltoallv(sendbuf, sendcounts, sdispls, MPI_LONG_LONG,
@@ -193,8 +197,20 @@ int main(int argc, char** argv) {
         printf("\n\n");
     }
 
+    chronometer_t chrono_time;
+    chrono_reset(&chrono_time);
+    chrono_start(&chrono_time);
 
     multi_partition_mpi(Input, local_n, P, np, rank); 
+
+    chrono_stop(&chrono_time);
+
+    if (rank == 0) {
+        double total_time_in_seconds = (double)chrono_gettotal(&chrono_time) / ((double)1000 * 1000 * 1000);
+        printf("\nTotal Time: %lfs\n", total_time_in_seconds);
+        printf("Throughput: %.2lfMEPS/s\n", nTotalElements / (total_time_in_seconds * 1e6));
+    }
+
 
     free(P);
     free(Input);
