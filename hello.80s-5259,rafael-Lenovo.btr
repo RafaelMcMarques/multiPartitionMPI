@@ -1,0 +1,7 @@
+
+hello:5259 terminated with signal 11 at PC=7fd80837f47e SP=7fffb641a050.  Backtrace:
+/lib/x86_64-linux-gnu/libc.so.6(free+0x1e)[0x7fd80837f47e]
+./hello(+0x17cf)[0x561f31a777cf]
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7fd808303d90]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7fd808303e40]
+./hello(+0x1225)[0x561f31a77225]

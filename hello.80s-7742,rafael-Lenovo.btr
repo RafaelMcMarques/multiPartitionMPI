@@ -1,0 +1,8 @@
+
+hello:7742 terminated with signal 11 at PC=55d400d384cf SP=7ffeaca8edd8.  Backtrace:
+./hello(+0x14cf)[0x55d400d384cf]
+./hello(+0x1732)[0x55d400d38732]
+./hello(+0x1d71)[0x55d400d38d71]
+/lib/x86_64-linux-gnu/libc.so.6(+0x29d90)[0x7f491057fd90]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80)[0x7f491057fe40]
+./hello(+0x12c5)[0x55d400d382c5]
