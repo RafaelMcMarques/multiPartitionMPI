@@ -52,11 +52,11 @@ void verifica_particoes(int rank, int total_recebido, long long *minha_particao,
 
     for (int i = 0; i < n; i++) {
         if ((minha_particao[i]) < lim_inf || (minha_particao[i] >= lim_sup)) {
-            printf("PARTICIONAMENTO %d COM ERROS, encontrado %lld\n", rank, minha_particao[i]);
+            printf("PARTICAO %d COM ERROS, encontrado %lld\n", rank, minha_particao[i]);
             return;
         }
     }
-    printf("PARTICIONAMENTO %d CORRETO!\n", rank);
+    printf("PARTICAO %d CORRETA!\n", rank);
 }
 
 void multi_partition_mpi(long long *Input, int n, long long *P, int np, int rank) {
