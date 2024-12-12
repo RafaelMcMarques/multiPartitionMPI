@@ -6,7 +6,7 @@
 
 #include "chrono.c"
 
-
+#define NTIMES 10
 #define DEBUG 0
 
 int verifica = 0;
@@ -201,7 +201,12 @@ int main(int argc, char** argv) {
     chrono_reset(&chrono_time);
     chrono_start(&chrono_time);
 
-    multi_partition_mpi(Input, local_n, P, np, rank); 
+    for (int i = 0; i < NTIMES; i++) {
+        if (rank == 0) {
+            printf("\n==== CALL %d ====\n\n", i);
+        }
+        multi_partition_mpi(Input, local_n, P, np, rank);
+    } 
 
     chrono_stop(&chrono_time);
 
